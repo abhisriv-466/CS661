@@ -1,1 +1,44 @@
-#sample
+# This program implements the isocontour extraction algorithm from scratch
+from vtk import *
+reader=vtkXMLImageDataReader()
+reader.SetFileName('file_path')  #File path should be given here
+reader.Update()
+data=reader.GetOutput()
+
+numCells=data.GetNumberOfCells()
+
+dataArr=data.GetPointData().getArray('Pressure')
+
+C=int(input("Enter the isovalue: "))
+
+for i in range(numCells):
+    cell=data.GetCell(i)
+    pid1=cell.GetPointId(0)
+    pid2=cell.GetPointId(1)
+    pid3=cell.GetPointId(2)
+    pid4=cell.GetPointId(3)
+    print("1D indices of the cell corner points are:-")
+    print(pid1,pid2,pid3,pid4)
+
+    val1=dataArr.GetTuple1(pid1)
+    val2=dataArr.GetTuple1(pid2)
+    val3=dataArr.GetTuple1(pid3)
+    val4=dataArr.GetTuple1(pid4)
+    print(val1,val2,val3,val4)
+
+
+    p1=data.GetPoint(pid1)
+    p2=data.GetPoint(pid2)
+    p3=data.GetPoint(pid3)
+    p4=data.GetPoint(pid4)
+
+
+    #Comparing values at cell vertices with C
+    if ((val1-C)*(val2-C))<=0:
+        pc1=p1+(((val1-C)/(val2-C))*(p2-p1))
+    if ((val2-C)*(val3-C))<=0:
+        pc2=p2+(((val2-C)/(val3-C))*(p3-p2))
+    if ((val3-C)*(val4-C))<=0:
+        pc3=p3+(((val3-C)/(val4-C))*(p4-p3))
+    if ((val4-C)*(val1-C))<=0:
+        pc4=p4+(((val4-C)/(val1-C))*(p1-p4))
