@@ -1,35 +1,41 @@
 from vtk import *
 
 # Load 3D data
-reader = vtkXMLImageDataReader()  # Assuming a .vti file
+##############
+reader = vtkXMLImageDataReader()
 reader.SetFileName('Isabel_3D.vti')
 reader.Update()
 
-# Transfer functions (replace with actual values from your tables)
+
+# Color Transfer functions
+####################
 colorTransferFunction = vtkColorTransferFunction()
 colorTransferFunction.AddRGBPoint(-4931.54,0.0,1.0,1.0)
 colorTransferFunction.AddRGBPoint(-2508.95,0.0,0.0,1.0)
 colorTransferFunction.AddRGBPoint(-1873.9,0.0,0.0,0.5)
 colorTransferFunction.AddRGBPoint(-1027.16,1.0,0.0,0.0)
 colorTransferFunction.AddRGBPoint(-298.031,1.0,0.4,0.0)
-colorTransferFunction.AddRGBPoint(2594.97,1.0,1.0,0.0)  # Example point
-# ... add more points as needed
+colorTransferFunction.AddRGBPoint(2594.97,1.0,1.0,0.0) 
 
+
+# Opacity Transfer functions
+############################
 opacityTransferFunction = vtkPiecewiseFunction()
 opacityTransferFunction.AddPoint(-4931.54, 1.0)
 opacityTransferFunction.AddPoint(101.815, 0.002)
 opacityTransferFunction.AddPoint(2594.97,0.0)
-  # Example point
-# ... add more points as needed
+
 
 # Volume mapper
+###############
 volumeMapper = vtkSmartVolumeMapper()
 volumeMapper.SetInputConnection(reader.GetOutputPort())
 volumeMapper.SetBlendModeToComposite()
 volumeMapper.SetRequestedRenderModeToGPU()  # Optional for GPU acceleration
 
-# Phong shading (optional)
-phongShading = input("Do you want to use Phong shading? (yes/no): ")
+# Option for using Phong shading
+################################
+phongShading = input("Do you want to use Phong shading? (Yes/No): ")
 if phongShading.lower() == "yes":
     volumeProperty = vtkVolumeProperty()
     volumeProperty.SetInterpolationTypeToLinear()
